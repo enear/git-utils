@@ -1,0 +1,36 @@
+#!/bin/bash
+
+RESET_ALL=$(tput sgr0)
+BOLD=$(tput bold)
+YELLOW="${BOLD}$(tput setaf 3)"
+
+README_FILENAME="README.md"
+
+warning() {
+	local mesg=$1
+	shift
+	printf "${YELLOW}[WARNING]${RESET_ALL} ${BOLD}${mesg}${RESET_ALL}\n" "$@" >&2
+}
+
+function find_pom_dirs() {
+	local path="${1:-.}"
+	while IFS= read -r -d '' file; do
+		printf "%s\0" "$(dirname "$file")"
+	done < <(git ls-files -z "${path}/*pom.xml")
+}
+
+function check_readme() {
+	local dir="${1:-.}"
+	local readme_path="$dir/$README_FILENAME"
+
+	if [[ ! -f "${readme_path}" ]]; then
+		warning "readme missing ${readme_path}"
+		return 1
+	fi
+	return 0
+}
+
+while IFS= read -r -d '' dir; do
+	check_readme "${dir}"
+done < <(find_pom_dirs)
+
