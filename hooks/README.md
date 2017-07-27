@@ -1,14 +1,17 @@
 # Git Hooks
 
-This project contains a set of useful hooks.
+This project contains a set of git hooks.
 
-## Changelog
+## Post Commit
 
-Output a warning if a `CHANGELOG.md` file does not exist in Maven projects
-after a commit or if a commit did not update the change log when modifications
-to the respective project occurred.
+Outputs warnings after a commit.
 
-## Readme
+### Readme
 
-Outputs a warning if a `README.md` file does not exist in Maven projects after
-a commit.
+Outputs a warning if a `README.md` file does not exist in Maven projects. 
+
+### Changelog
+
+Outputs a warning if a `CHANGELOG.md` file does not exist in Maven projects or
+if a commit did not update the change log when modifications to the respective
+project occurred.
