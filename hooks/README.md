@@ -4,11 +4,27 @@ This project contains a set of git hooks.
 
 ## Installation
 
-To install the hooks execute the following script:
+Perhaps the best way to install is to use git initialization template.
 
+```bash
+# Defines your git init templates directory
+git config --global init.templatedir ~/.git_template
+
+# Copy the hooks to your init template directory
+mkdir ~/.git_template/hooks
+cp -r * ~/.git_template/hooks
 ```
-$ ./copy-hooks <repo>
+
+This will guarantee that the hooks will be copied every time a git repository
+is initialized. If you already have a git repository without the hooks simply
+reinitialize the repository.
+
+```bash
+# Reinitializes an existing the repository
+git init
 ```
+
+Of course you may copy the hooks manually to each repository as well.
 
 ## Details
 
