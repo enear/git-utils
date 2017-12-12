@@ -7,12 +7,19 @@ This project contains a set of git hooks.
 Perhaps the best way to install is to use git initialization template.
 
 ```bash
-# Defines your git init templates directory
-git config --global init.templatedir ~/.git_template
+# Create a git init template directory
+$ mkdir -p ~/.git_template/hooks
 
-# Copy the hooks to your init template directory
-mkdir ~/.git_template/hooks
-cp -r * ~/.git_template/hooks
+# Clone this project anywhere
+$ git clone https://github.com/enear/git-utils.git
+
+# Copy the hooks to the git init template directory
+$ cd git-utils/hooks
+$ cp -r post-commit post-commit.d ~/.git_template/hooks
+
+# Define your git init templates directory globally (i.e., for all repositories)
+$ git config --global init.templatedir ~/.git_template
+
 ```
 
 This will guarantee that the hooks will be copied every time a git repository
@@ -21,7 +28,12 @@ reinitialize the repository.
 
 ```bash
 # Reinitializes an existing the repository
-git init
+$ git init
+
+# The hooks should have copied into '.git/hooks'
+$ ls .git/hooks
+post-commit
+post-commit.d
 ```
 
 Of course you may copy the hooks manually to each repository as well.
