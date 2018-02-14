@@ -12,22 +12,6 @@ warning() {
 	printf "${YELLOW}[WARNING]${RESET_ALL} ${BOLD}${mesg}${RESET_ALL}\n" "$@" >&2
 }
 
-function find_pom_dirs() {
-	local path="${1:-.}"
-	while IFS= read -r -d '' file; do
-		printf "%s\0" "$(dirname "$file")"
-	done < <(git ls-files -z "${path}/*pom.xml")
-}
-
-function find_project_exclusions() {
-	local path="${1:-.}"
-	while IFS= read -r -d '' file; do
-		if [[ "$dir" != "$file" ]]; then
-			printf ":!%s\n" "$file"
-		fi
-	done < <(find_pom_dirs "${path}")
-}
-
 function check_changelog() {
 	local dir="${1:-.}"
 	local changelog_path="$dir/$CHANGELOG_FILENAME"
@@ -54,17 +38,10 @@ function check_changelog_not_updated() {
 	local dir="${1:-.}"
 	changelog_committed "${dir}"
 	if [[ $? -eq 1 ]]; then
-		exclusions=($(find_project_exclusions "$dir"))
-		git diff-tree --no-commit-id --name-only -r HEAD \
-			--exit-code -- "${dir}" "${exclusions[@]}" &> /dev/null
-		if [[ $? -eq 1 ]]; then
-			warning "change log has not been updated ${dir}/${CHANGELOG_FILENAME}"
-		fi
+		warning "change log has not been updated ${dir}/${CHANGELOG_FILENAME}"
 	fi
 }
 
-while IFS= read -r -d '' dir; do
-	check_changelog "${dir}"
-	check_changelog_not_updated "${dir}"
-done < <(find_pom_dirs)
-
+root_dir="$(git rev-parse --show-toplevel)"
+check_changelog "${root_dir}"
+check_changelog_not_updated "${root_dir}"

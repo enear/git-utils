@@ -12,13 +12,6 @@ warning() {
 	printf "${YELLOW}[WARNING]${RESET_ALL} ${BOLD}${mesg}${RESET_ALL}\n" "$@" >&2
 }
 
-function find_pom_dirs() {
-	local path="${1:-.}"
-	while IFS= read -r -d '' file; do
-		printf "%s\0" "$(dirname "$file")"
-	done < <(git ls-files -z "${path}/*pom.xml")
-}
-
 function check_readme() {
 	local dir="${1:-.}"
 	local readme_path="$dir/$README_FILENAME"
@@ -30,7 +23,5 @@ function check_readme() {
 	return 0
 }
 
-while IFS= read -r -d '' dir; do
-	check_readme "${dir}"
-done < <(find_pom_dirs)
-
+root_dir="$(git rev-parse --show-toplevel)"
+check_readme "${root_dir}"
